@@ -1,10 +1,14 @@
-package com.ideaco.dia;
+package com.ideaco.dia.service;
 
+import com.ideaco.dia.dto.JobDTO;
+import com.ideaco.dia.model.JobModel;
+import com.ideaco.dia.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class FirstService {
@@ -16,12 +20,25 @@ public class FirstService {
         return "Sending message "+message;
     }
 
-    public JobModel getJobById(int jobId){
-        return jobRepository.findById(jobId).get();
+    public JobDTO getJobById(int jobId){
+        return convertJob(jobRepository.findById(jobId).get());
     }
 
-    public List<JobModel> findAllJobs(){
-        return jobRepository.findAll();
+    private JobDTO convertJob(JobModel jobModel){
+        //tanpa constructor
+        JobDTO jobDTO = new JobDTO();
+        jobDTO.setJobName(jobModel.getJobName());
+        jobDTO.setJobSalary(jobDTO.getJobSalary());
+        return jobDTO;
+        // dengan constructor
+//        return new JobDTO(jobModel.getJobName(), jobModel.getJobSalary());
+    }
+
+    public List<JobDTO> findAllJobs(){
+        List<JobModel> jobModels = jobRepository.findAll();
+
+        return jobModels.stream().map(this::convertJob)
+                .collect(Collectors.toList());
     }
 
     public JobModel createJob(String jobName,

@@ -27,8 +27,10 @@ public class FirstService {
     private JobDTO convertJob(JobModel jobModel){
         //tanpa constructor
         JobDTO jobDTO = new JobDTO();
+        jobDTO.setJobId(jobModel.getJobId());
+        jobDTO.setJobDesc(jobModel.getJobDesc());
         jobDTO.setJobName(jobModel.getJobName());
-        jobDTO.setJobSalary(jobDTO.getJobSalary());
+        jobDTO.setJobSalary(jobModel.getJobSalary());
         return jobDTO;
         // dengan constructor
 //        return new JobDTO(jobModel.getJobName(), jobModel.getJobSalary());
@@ -54,8 +56,8 @@ public class FirstService {
         return jobRepository.save(newJob);
     }
 
-    public JobModel createJobWithBody(JobModel jobModel){
-        return jobRepository.save(jobModel);
+    public JobDTO createJobWithBody(JobModel jobModel){
+        return convertJob(jobRepository.save(jobModel));
     }
 
     public JobModel getJobByName(String jobName){
@@ -76,8 +78,8 @@ public class FirstService {
         return jobOpt.get();
     }
 
-    public List<JobModel> searchJob(String jobName){
-        return jobRepository.searchJob(jobName);
+    public List<JobDTO> searchJob(String jobName){
+        return jobRepository.searchJob(jobName).stream().map(this::convertJob).collect(Collectors.toList());
     }
 
     public List<JobModel> filterJob(int jobSalary){

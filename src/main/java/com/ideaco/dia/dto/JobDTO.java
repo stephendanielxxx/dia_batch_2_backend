@@ -1,14 +1,27 @@
 package com.ideaco.dia.dto;
 
 public class JobDTO {
+    private int jobId;
     private String jobName;
+    private String jobDesc;
     private int jobSalary;
 
     public JobDTO(){}
 
-    public JobDTO(String jobName, int jobSalary) {
-        this.jobName = jobName;
-        this.jobSalary = jobSalary;
+    public int getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(int jobId) {
+        this.jobId = jobId;
+    }
+
+    public String getJobDesc() {
+        return jobDesc;
+    }
+
+    public void setJobDesc(String jobDesc) {
+        this.jobDesc = jobDesc;
     }
 
     public String getJobName() {

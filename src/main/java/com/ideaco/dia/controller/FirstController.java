@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.crypto.Data;
 import java.util.List;
 
 @RestController
@@ -36,8 +37,12 @@ public class FirstController {
     }
 
     @GetMapping("/jobs")
-    public List<JobDTO> getAllJobs() {
-        return firstService.findAllJobs();
+    public void getAllJobs(HttpServletRequest request, HttpServletResponse response) {
+        List<JobDTO> allJobs = firstService.findAllJobs();
+        DataResponse<List<JobDTO>> dataResponse = new DataResponse<>();
+        dataResponse.setData(allJobs);
+
+        HandlerResponse.responseSuccessWithData(response, dataResponse);
     }
 
     @PostMapping("/job")
@@ -49,8 +54,12 @@ public class FirstController {
     }
 
     @PostMapping("/job/body")
-    public JobModel createJobWithBody(@RequestBody JobModel jobModel) {
-        return firstService.createJobWithBody(jobModel);
+    public void createJobWithBody(HttpServletRequest request, HttpServletResponse response,
+                                  @RequestBody JobModel jobModel) {
+        JobDTO jobWithBody = firstService.createJobWithBody(jobModel);
+        DataResponse<JobDTO> dataResponse = new DataResponse<>();
+        dataResponse.setData(jobWithBody);
+        HandlerResponse.responseSuccessWithData(response, dataResponse);
     }
 
     @GetMapping("/job/name/{jobName}")
@@ -75,8 +84,14 @@ public class FirstController {
     }
 
     @GetMapping("/job/search")
-    public List<JobModel> searchJob(@RequestParam("jobName") String jobName) {
-        return firstService.searchJob(jobName);
+    public void searchJob(HttpServletRequest request, HttpServletResponse response,
+                          @RequestParam("jobName") String jobName) {
+        List<JobDTO> jobDTOS = firstService.searchJob(jobName);
+        DataResponse<List<JobDTO>> dataResponse = new DataResponse<>();
+        dataResponse.setData(jobDTOS);
+
+        HandlerResponse.responseSuccessWithData(response, dataResponse);
+
     }
 
     @GetMapping("/job/filter")
